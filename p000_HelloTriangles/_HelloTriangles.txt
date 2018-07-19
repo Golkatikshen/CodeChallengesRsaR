@@ -1,1 +1,4 @@
-Create an app that generates a triangle and can changes its color when the mouse hovers it
+Create an app that generates a triangle and can changes its color when the mouse hovers it.
+
+// CONSTRAINTS //
+None
