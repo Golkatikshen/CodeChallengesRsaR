@@ -6,9 +6,7 @@ class Triangle
   
   Triangle()
   {
-    p0 = randomIntPoint();
-    p1 = randomIntPoint();
-    p2 = randomIntPoint();
+    randomize();
   }
   
   void display()
