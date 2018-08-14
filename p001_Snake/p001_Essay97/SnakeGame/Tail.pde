@@ -9,10 +9,10 @@ public class Tail extends Body{
   public void setEnd(boolean vertical){
     if(vertical){
       endX = startX;
-      endY += 8;
+      endY += 1.4;
     }
     else{
-      endX += 8;
+      endX += 1.4;
       endY = startY;
     }
   }
