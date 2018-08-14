@@ -1,0 +1,11 @@
+// DESC_TASK //
+Recreate the classic Snake game.
+https://en.wikipedia.org/wiki/Snake_(video_game_genre)
+
+
+// DEADLINE //
+29-Sept-2018
+
+
+// CONSTRAINTS //
+Implement the no-wall mode.
