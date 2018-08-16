@@ -12,5 +12,4 @@ public class Head extends Body{
     ellipseMode(CENTER);
     ellipse(startX, startY, diameter, diameter);
   }
-  
 }

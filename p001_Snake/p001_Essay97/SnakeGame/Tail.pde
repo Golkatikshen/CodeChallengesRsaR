@@ -1,9 +1,11 @@
 public class Tail extends Body{
   private float endX, endY;
+  private boolean last;
   
   public Tail(float startX, float startY, int direction){
     super(startX, startY, direction);
     this.setEnd();
+    this.last = true;
   }
   
   public void setEnd(){ //setta la fine, in pratica controlla lunghezza del segmento di coda
@@ -27,12 +29,16 @@ public class Tail extends Body{
     }
   }
   
-  float getEndX(){
+  public float getEndX(){
     return endX;
   }
   
-  float getEndY(){
+  public float getEndY(){
     return endY;
+  }
+  
+  public void setLast(){
+    last = false;
   }
   
   public void display(){
@@ -43,7 +49,6 @@ public class Tail extends Body{
   
   public void move(Queue<TurningPoint> turns, float prevX, float prevY, int totTails){
     for(TurningPoint t: turns.getList()){
-      
       switch(direction){
       case RIGHT:
         if(t.getY()==startY && t.getX()>=endX && t.getX()<=startX){
@@ -63,10 +68,9 @@ public class Tail extends Body{
           direction = t.getDirection();
         break;
       }
-      if(totTails == t.getNTails())
-         turns.dequeue();
-       else
-         t.incrementNTails();
+      
+      if(this.last)
+       turns.dequeue();
     }
     startX = prevX;
     startY = prevY;

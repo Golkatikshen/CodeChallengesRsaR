@@ -10,7 +10,7 @@ public class Snake {
     this.lastY = t.get(0).getEndY();
   }
 
-  public void move(Queue<TurningPoint> turns) { //si possono togliere tutte le direzioni da move perchè la direzione è salvata in body
+  public void move(Queue<TurningPoint> turns) {
     float prevX, prevY;
     
     h.move();
@@ -20,6 +20,7 @@ public class Snake {
       i.move(turns, prevX, prevY, t.size());
       i.setEnd();
     }
+    
   }
 
   public void display() {
@@ -28,11 +29,12 @@ public class Snake {
       i.display();
   }
 
-  public void addTail() {
+  public void addTail() { //settare a false il last della tail precedente
     Tail tmp = new Tail(lastX, lastY, h.getDirection());
     t.add(tmp);
     lastX = tmp.getEndX();
     lastY = tmp.getEndY();
+    t.get(t.size()-2).setLast();
   }
 
   public float getX() {
