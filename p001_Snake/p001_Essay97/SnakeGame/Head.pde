@@ -1,8 +1,8 @@
 public class Head extends Body{
   private float diameter;
   
-  public Head(float startX, float startY){
-    super(startX, startY);
+  public Head(float startX, float startY, int direction){
+    super(startX, startY, direction);
     diameter = 22;
   }
   
