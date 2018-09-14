@@ -1,7 +1,7 @@
 Snake snake;
 Mouse mouse;
 boolean mouseKilled = false;
-final float killRange = 10;
+final float killRange = 12;
 
 void setup()
 {
