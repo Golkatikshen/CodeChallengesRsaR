@@ -11,9 +11,8 @@ class Snake
   
   void move()
   {
-    if(!dead)
-      for(BodyPart bp : body)
-        bp.move(head);
+    for(BodyPart bp : body)
+      bp.move(head, dead);
   }
   
   void addBodyPart()
@@ -28,6 +27,7 @@ class Snake
   
   void drawSnake()
   {
+    fill(0, 0, 255);
     for(int i=0; i<body.size(); i++)
       ellipse(body.get(i).x, body.get(i).y, 15, 15);
   }

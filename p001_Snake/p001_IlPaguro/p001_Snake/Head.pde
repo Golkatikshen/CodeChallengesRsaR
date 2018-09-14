@@ -9,7 +9,7 @@ class Head extends BodyPart
   boolean crashesWithBody(ArrayList<BodyPart> body)
   {
     for(BodyPart bp : body)
-      if(!(bp instanceof Head) && x==bp.x && y==bp.y)
+      if(!(bp instanceof Head) && x>=bp.x-5 && x<=bp.x+5 && y>=bp.y-5 && y<=bp.y+5)
         return true; //<>//
     return false;
   }

@@ -4,7 +4,7 @@ class BodyPart
   float x, changeAtX=-1;
   float y, changeAtY=-1;
   final float separation = 15;
-  final float movement = 1;
+  final float movement = 1.5;
   int direction, newDirection = 4;
   BodyPart nextBodyPart = null;
   
@@ -38,11 +38,13 @@ class BodyPart
      this.y = y;
    }
    
-  void move(Head head)
+  void move(Head head, boolean dead)
   {
     //Checks if a body part has to change direction
     if(x!=changeAtX || y!=changeAtY)
     {
+      if(dead)
+        direction = parseInt(random(4));
       switch(direction)
       {
         case 0: //Down
@@ -65,7 +67,7 @@ class BodyPart
       if(neck)
         head.locked = false;
       changeDirectionAndNotify(newDirection);
-      move(head);
+      move(head, dead);
     }
     //Checks if Snake went off the screen
     if(x == -5)

@@ -12,8 +12,7 @@ void setup()
 
 void draw()
 {
-  background(255);
-  println(snake.dead);
+  background(0);
   if(mouseKilled)
   {
     mouse = new Mouse();
@@ -32,6 +31,8 @@ void draw()
 
 void keyPressed()
 {
+  if(!snake.dead)
+  {
     if((key == 'w' || keyCode == UP) && snake.head.direction != 0 && !snake.head.locked)
     {
       snake.head.locked = true;
@@ -56,6 +57,7 @@ void keyPressed()
       snake.head.direction = 1;
       snake.head.changeDirectionAndNotify(1);
     }
+  }
 }
 
 boolean snakeEats()

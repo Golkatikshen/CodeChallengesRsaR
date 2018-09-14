@@ -10,6 +10,7 @@ class Mouse
   }
   
   void drawMouse(){
-    rect(x, y, 5, 5); 
+    fill(255, 0, 0);
+    rect(x, y, 7, 7, 1); 
   }
 }
