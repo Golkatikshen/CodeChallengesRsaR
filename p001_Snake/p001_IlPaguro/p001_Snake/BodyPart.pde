@@ -10,7 +10,7 @@ class BodyPart
   
   BodyPart(BodyPart lastBodyPart)
   {
-    switch(lastBodyPart.direction) //<>//
+    switch(lastBodyPart.direction)
     {
       case 0: //Going down
         x = lastBodyPart.x;

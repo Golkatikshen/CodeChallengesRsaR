@@ -1,0 +1,10 @@
+// DESC_TASK //
+Create an app that generates a triangle and can change its color when the mouse hovers it.
+
+
+// DEADLINE //
+11-Aug-2018
+
+
+// CONSTRAINTS //
+None

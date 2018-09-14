@@ -13,6 +13,7 @@ void setup()
 void draw()
 {
   background(255);
+  println(snake.dead);
   if(mouseKilled)
   {
     mouse = new Mouse();
@@ -21,6 +22,7 @@ void draw()
   mouse.drawMouse();
   snake.move();
   snake.drawSnake();
+  snake.dead = snake.head.crashesWithBody(snake.body);
   if(snakeEats())
   {
     mouseKilled = true;
