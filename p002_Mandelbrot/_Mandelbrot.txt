@@ -1,0 +1,11 @@
+// DESC_TASK //
+Visualize the Mandelbrot Set and the escape time of the points that not escape the set.
+https://en.wikipedia.org/wiki/Mandelbrot_set
+
+
+// DEADLINE //
+15-Oct-2018
+
+
+// CONSTRAINTS //
+None
