@@ -1,13 +1,13 @@
-int maxiter = 40;
+int maxiter = 1000;
 boolean drawn = false;
 float x1 = -2;
-float x2 = 2;
-float y1 = -2;
-float y2 = 2;
+float x2 = 0.6;
+float y1 = -1.5;
+float y2 = 1.5;
 
 void setup() {
-  fullScreen();
-  background(255,0,0);
+  size(800, 800);
+  background(0);
   colorMode(HSB, 255);
 }
 
@@ -16,6 +16,17 @@ void draw() {
     drawn = true;
     drawSet();
   }
+}
+
+void mouseClicked() {
+  float zoom = 1.01;
+  float x = map(mouseX, 0, width, x1, x2);
+  float y = map(mouseY, 0, width, y2, y1);
+  x1 = x1 + abs(x1-x)/zoom;
+  x2 = x2 - abs(x2-x)/zoom;
+  y1 = y1 + abs(y1-y)/zoom;
+  y2 = y2 - abs(y2-y)/zoom;
+  drawn = false;
 }
 
 void drawSet() {
@@ -29,9 +40,11 @@ void drawSet() {
   
   for(int i = 0; i < width; i++) {
     for(int j = 0; j < height; j++) {
-        c.re = map(i, 0, width, x1, x2);
-        c.im = map(j, 0, height, y2, y1);
-        if(c.abs() <= 2) {
+        float re = map(i, 0, width, x1, x2);
+        float im = map(j, 0, height, y2, y1);
+        c.re = re;
+        c.im = im;
+        if(c.abs() < 2) {
            iter = mandelbrot(c);
            hue = floor(255 - 255 * iter / maxiter);
            if(iter < maxiter) {
