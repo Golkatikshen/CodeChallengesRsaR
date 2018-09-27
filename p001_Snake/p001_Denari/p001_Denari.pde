@@ -30,36 +30,47 @@ void draw(){
   }
   else
     start = false;
+  body.add(new Coordinate(head.x, head.y));
   for(i=0; i < body.size(); i++)
     shape(square, body.get(i).x, body.get(i).y);
   shape(food, Xfood, Yfood);
-   //<>//
   move(direction);
   if(head.x == Xfood && head.y == Yfood){
-    Xfood = (int)random(19) * 40; //<>//
+    Xfood = (int)random(19) * 40;
     Yfood = (int)random(15) * 40;
     if(body.size() == 0)
       body.add(new Coordinate(head.x, head.y));
     else
       body.add(body.getLast());
   }
-  body.add(new Coordinate(head.x, head.y));
+  else {
+    for(Coordinate coor:body)
+      if(coor.x == head.x && coor.y == head.y){
+        fill(255, 0 , 0); //<>//
+        noLoop();
+        return;
+      }
+  }
   frameRate(20);
 }
 
 void keyPressed(){
   switch(key){
     case 'a':
-      direction = 0;
+      if(direction != 2)
+        direction = 0;
     break;
     case 'w':
-      direction = 1;
+      if(direction != 3)
+        direction = 1;
     break;
     case 'd':
-      direction = 2;
+      if(direction != 0)
+        direction = 2;
     break;
     case 's':
-      direction = 3;
+      if(direction != 1)
+        direction = 3;
     break;
   }
 }
