@@ -2,10 +2,10 @@ import java.util.LinkedList;
 
 
 PShape square, food, noSquare;
-int direction, Xfood, Yfood, i;
+int direction, i;
 boolean start = true;
 LinkedList<Coordinate> body = new LinkedList();
-Coordinate head = new Coordinate(360, 280), tail;
+Coordinate head, tail, Cfood;
 
 void setup(){
   noStroke();
@@ -17,8 +17,8 @@ void setup(){
   noSquare.setFill(255);
   square.setFill(0);
   food.setFill(100);
-  Xfood = (int)random(19) * 40;
-  Yfood = (int)random(15) * 40;
+  head = new Coordinate(360, 280);
+  Cfood = new Coordinate((int)random(19) * 40, (int)random(15) * 40);
   tail = new Coordinate(0, 0);
   direction = 0;
 }
@@ -33,20 +33,29 @@ void draw(){
   body.add(new Coordinate(head.x, head.y));
   for(i=0; i < body.size(); i++)
     shape(square, body.get(i).x, body.get(i).y);
-  shape(food, Xfood, Yfood);
+  shape(food, Cfood.x, Cfood.y);
   move(direction);
-  if(head.x == Xfood && head.y == Yfood){
-    Xfood = (int)random(19) * 40;
-    Yfood = (int)random(15) * 40;
+  //Lo so è un puttanaio
+  if(head.x == Cfood.x && head.y == Cfood.y){    
+    Cfood.x = (int)random(19) * 40;
+    Cfood.y = (int)random(15) * 40;
+    /* Se ha mangiato il cibo, ne genera un altro pezzo controllando
+    che non sia presente dove esiste un pezzo di corpo*/
+    for(i=0; i < body.size(); i++)
+      if(body.get(i).x == Cfood.x && body.get(i).y == Cfood.y){ //<>//
+         Cfood.x = (int)random(19) * 40;
+         Cfood.y = (int)random(15) * 40;
+         i = 0;
+      }
     if(body.size() == 0)
       body.add(new Coordinate(head.x, head.y));
     else
       body.add(body.getLast());
   }
+  //Controlla se si è mangiato
   else {
     for(Coordinate coor:body)
       if(coor.x == head.x && coor.y == head.y){
-        fill(255, 0 , 0); //<>//
         noLoop();
         return;
       }
