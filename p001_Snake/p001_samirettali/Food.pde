@@ -12,8 +12,6 @@ class Food {
     void newPosition() {
         this.position.x = ((int) random(width / size)) * size;
         this.position.y = ((int) random(height / size)) * size;
-        // this.position.x = ((int) (width / size / 2)) * size;
-        // this.position.y = ((int) (height / size / 2)) * size;
     }
 
     PVector getPosition() {
