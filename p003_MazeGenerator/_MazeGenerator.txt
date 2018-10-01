@@ -1,0 +1,9 @@
+// DESC_TASK //
+Create a program that generates mazes.
+
+// DEADLINE //
+25-Oct-2018
+
+
+// CONSTRAINTS //
+Highlight the solution of the maze.
