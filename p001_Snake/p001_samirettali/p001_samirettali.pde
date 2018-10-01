@@ -5,7 +5,7 @@ int size = 20;
 
 void setup() {
     size(1600, 900);
-    frameRate(25);
+    frameRate(15);
     noStroke();
     this.snake = new Snake(this.size);
     this.food = new Food(this.size);
