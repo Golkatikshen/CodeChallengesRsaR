@@ -9,7 +9,7 @@ void setup()
   println("Click to center the clicked point");
   println("Scroll the mouse wheel to zoom in/out");
   println("USE K/L TO DECREMENT/INCREMENT THE LEVEL OF DETAIL\n\n");
-  
+  loadPixels();
   calculateMandelbrot();
 }
 
@@ -68,7 +68,7 @@ void keyPressed()
 void calculateMandelbrot()
 {
   background(0);
-  loadPixels();
+  
   for(int x=0; x<width; x++)
   {
     for(int y=0; y<height; y++)
