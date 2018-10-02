@@ -4,6 +4,7 @@ color col_snake;
 color col_cibo[];
 boolean gameover;
 ArrayList<Casella> snake;
+int mov;
 Casella head;
 Casella cibo;
 Direzione direz, new_direz;
@@ -42,6 +43,7 @@ void condizioni_iniziali(){
   snake = new ArrayList<Casella>();
   direz = (new_direz  = Direzione.FERMO);
   gameover = false;
+  mov = 0;
 
   snake.add(head);
   genera_coordinate_cibo();
@@ -71,13 +73,15 @@ void draw(){
   }
   else{
     head.move(direz);
-    direz = new_direz;
+    if(mov == 0){
+      direz = new_direz;
+    }
     if(head.x == cibo.x && head.y == cibo.y){
       Casella ultima, nuova;
       int i=0;
       genera_coordinate_cibo();
       
-      for(;i<(cibo.colore%2 +1); i++){
+      for(; i<(cibo.colore%2 +1); i++){
         ultima = snake.get(snake.size() -1);
         nuova = new Casella(ultima.x, ultima.y, Tipo.CORPO);
         ultima.next = nuova;
@@ -87,6 +91,7 @@ void draw(){
     else if(!spazio_libero(head, 1)){
       gameover = true;
     }
+    mov = (mov + 5)%20;
     
     //delay(20); 
     // Scommentare l'istruzione sopra per andare piu' piano

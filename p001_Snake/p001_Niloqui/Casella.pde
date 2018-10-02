@@ -16,19 +16,19 @@ class Casella{
   void move(Direzione nuova_dir){
     switch(dir){
       case SOPRA:
-        y -= CONST_GRID;
+        y -= 5;
         if(y < 0) y+= ALTE;
         break;
       case SOTTO:
-        y += CONST_GRID;
+        y += 5;
         if(y >= ALTE) y-= ALTE;
         break;
       case DESTRA:
-        x += CONST_GRID;
+        x += 5;
         if(x >= LARG) x-= LARG;
         break;
       case SINISTRA:
-        x -= CONST_GRID;
+        x -= 5;
         if(x < 0) x+= LARG;
         break;
       case FERMO:
@@ -38,7 +38,8 @@ class Casella{
     if(next != null)
       next.move(dir);
     
-    dir = nuova_dir;
+    if(mov == 0)
+      dir = nuova_dir;
   }
   
   void disegna(){
