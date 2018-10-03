@@ -26,6 +26,7 @@ public class Maze
       int psx = (width/2)-(half_square_size*cols)+half_square_size;
       int psy = (height/2)-(half_square_size*rows)+half_square_size;
       
+      //Calculation of the cells position for the squared maze
       for(int i=0; i<cols; i++)
         for(int j=0; j<rows; j++)
         {
@@ -41,6 +42,7 @@ public class Maze
             ((C_Square)cells.get(cells.size()-1)).d_cell = the_void;
         }
         
+      //Linking each cell with the neighbours
       for(int i=psx; i<psx+cols*square_size; i+=square_size)
         for(int j=psy; j<psy+rows*square_size; j+=square_size)
         {
@@ -60,10 +62,10 @@ public class Maze
       ((C_Square)getCellByPosition(psx, psy + int(random(0, rows))*square_size)).start = true;
       ((C_Square)getCellByPosition(psx+(cols-1)*square_size, psy + int(random(0, rows))*square_size)).end = true;
       
-      println("X0: "+psx);
-      println("Y0: "+psy);
+      //println("X0: "+psx);
+      //println("Y0: "+psy);
       squareMazeGeneration(pix, piy);
-      println("Square maze generation done");
+      //println("Squared maze generation done");
     }
     
     if(type == 1)
@@ -71,11 +73,12 @@ public class Maze
       //ignoring rows
       int n_side = cols;
       int maze_side = n_side*tri_size;
-      float x = sqrt((2*tri_apothem)*(2*tri_apothem)-(tri_size/2)*(tri_size/2));
+      float x = sqrt((2*tri_apothem)*(2*tri_apothem)-(half_tri_size)*(half_tri_size));
       
       int psx = width/2;
       int psy = int((height/2)-(maze_side*sqrt(3)/2-maze_side/(2*sqrt(3)))+(tri_height-tri_apothem)*5);
       
+      //Calculation of the cells position for the triangular maze
       for(int i=0; i<n_side; i++)
       {
         for(int j=0; j<2*i+1; j++)
@@ -97,11 +100,12 @@ public class Maze
         psy += tri_height;
       }
       
+      //Linking each cell with the neighbours
       for(int i=0; i<cells.size(); i++)
       {
         C_Triangle c = (C_Triangle)cells.get(i);
         
-        if(c.id_n%2 == 1) // se l'id è dispari
+        if(c.id_n%2 == 1)
         {
           if(c.h_cell == null)
             c.h_cell = getTCell(c.id_row-1, c.id_n-1);
@@ -127,10 +131,230 @@ public class Maze
       int v = int(random(n_side/2+1, n_side));
       getTCell(v, 2*v).end = true;
       
-      println("ID_ROW: "+i_id_row);
-      println("ID_N: "+i_id_n);
+      //println("ID_ROW: "+i_id_row);
+      //println("ID_N: "+i_id_n);
       triangleMazeGeneration(i_id_row, i_id_n);
-      println("Triangle maze generation done");
+      //println("Triangular maze generation done");
+    }
+    
+    if(type == 2)
+    {
+      //ignoring rows
+      int n_side = cols;
+      float x = sqrt((2*hex_apothem)*(2*hex_apothem)-(hex_apothem)*(hex_apothem));
+      
+      float psx = width/2;
+      float psy = height/2;
+      int current_row = 0;
+      int current_id = 0;
+      int ring = 0;
+      int ring_v = 0;
+      boolean destra = false;
+      int mov = 0;
+      
+      int tot_hex = 1;
+      for(int i=1; i<n_side; i++)
+        tot_hex += 6*i;
+      
+      //Calculation of the cells position for the squared maze
+      for(int i=0; i<tot_hex; i++)
+      {
+        cells.add(new C_Hexagon(int(psx), int(psy), current_row, current_id));
+        
+        if(current_row == -current_id && i == ring_v)
+        {
+          current_id += 2;
+          psx += 2*hex_apothem;
+          ring ++;
+          ring_v += ring*6;
+          mov = 1;
+          
+          if(ring == n_side)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).ul_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).ur_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).r_cell = the_void;
+          }
+        }
+        else if(current_id == ring*2)
+        {
+          current_id -= 1;
+          current_row += 1;
+          psx -= hex_apothem;
+          psy += x;
+          destra = false;
+          mov = 2;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).ur_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).r_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dr_cell = the_void;
+          }
+        }
+        else if(current_id == -ring*2)
+        {
+          current_id += 1;
+          current_row -= 1;
+          psx += hex_apothem;
+          psy -= x;
+          destra = true;
+          mov = 4;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).ul_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).l_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dl_cell = the_void;
+          }
+        }
+        else if(!destra && current_id == -current_row)
+        {
+          current_id -= 1;
+          current_row -= 1;
+          psx -= hex_apothem;
+          psy -= x;
+          mov = 3;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).l_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dl_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dr_cell = the_void;
+          }
+        }
+        else if(destra && current_id == current_row)
+        {
+          current_id += 2;
+          psx += 2*hex_apothem;
+          mov = 0;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).l_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).ul_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).ur_cell = the_void;
+          }
+        }
+        else if(!destra && current_id == current_row)
+        {
+          current_id -= 2;
+          psx -= 2*hex_apothem;
+          mov = 0;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).r_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dr_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dl_cell = the_void;
+          }
+        }
+        else if(mov == 1)
+        {
+          current_id += 1;
+          current_row += 1;
+          psx += hex_apothem;
+          psy += x;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).ur_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).r_cell = the_void;
+          }
+        }
+        else if(mov == 2)
+        {
+          current_id -= 1;
+          current_row += 1;
+          psx -= hex_apothem;
+          psy += x;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).r_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dr_cell = the_void;
+          }
+        }
+        else if(mov == 3)
+        {
+          current_id -= 1;
+          current_row -= 1;
+          psx -= hex_apothem;
+          psy -= x;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).dl_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).l_cell = the_void;
+          }
+        }
+        else if(mov == 4)
+        {
+          current_id += 1;
+          current_row -= 1;
+          psx += hex_apothem;
+          psy -= x;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).ul_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).l_cell = the_void;
+          }
+        }
+        else if(destra)
+        {
+          current_id += 2;
+          psx += 2*hex_apothem;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).ur_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).ul_cell = the_void;
+          }
+        }
+        else if(!destra)
+        {
+          current_id -= 2;
+          psx -= 2*hex_apothem;
+          
+          if(ring == n_side-1)
+          {
+            ((C_Hexagon)cells.get(cells.size()-1)).dr_cell = the_void;
+            ((C_Hexagon)cells.get(cells.size()-1)).dl_cell = the_void;
+          }
+        }
+      }
+      
+      //Linking each cell with the neighbours
+      for(int i=0; i<cells.size(); i++)
+      {
+        C_Hexagon c = (C_Hexagon)cells.get(i);
+        
+        if(c.ur_cell == null)
+          c.ur_cell = getHCell(c.id_row-1, c.id_n+1);
+        if(c.ul_cell == null)
+          c.ul_cell = getHCell(c.id_row-1, c.id_n-1);
+        if(c.l_cell == null)
+          c.l_cell = getHCell(c.id_row, c.id_n-2);
+        if(c.r_cell == null)
+          c.r_cell = getHCell(c.id_row, c.id_n+2);
+        if(c.dr_cell == null)
+          c.dr_cell = getHCell(c.id_row+1, c.id_n+1);
+        if(c.dl_cell == null)
+          c.dl_cell = getHCell(c.id_row+1, c.id_n-1);
+      }
+      
+      int i = int(random(0, cells.size()));
+      int i_id_row = ((C_Hexagon)cells.get(i)).id_row;
+      int i_id_n = ((C_Hexagon)cells.get(i)).id_n;
+        
+      getHCell(-n_side+1, n_side%2 == 0 ? 1 : 0).start = true;
+      getHCell(n_side-1, n_side%2 == 0 ? -1 : 0).end = true;
+      
+      //println("ID_ROW: "+i_id_row);
+      //println("ID_N: "+i_id_n);
+      hexagonMazeGeneration(i_id_row, i_id_n);
+      //println("Hexagonal maze generation done");
     }
   }
   
@@ -215,7 +439,52 @@ public class Maze
         getTCell(c.id_row, c.id_n+1).l_border = false;
       }
     }while(c.h_cell.check == false || c.l_cell.check == false || c.r_cell.check == false);      
-
+  }
+  
+  void hexagonMazeGeneration(int id_row, int id_n)
+  {
+    C_Hexagon c = getHCell(id_row, id_n);
+    c.check = true;
+    
+    do{
+      int r = int(random(0, 6));
+      if(r == 0 && c.ur_cell.check == false)
+      {
+        hexagonMazeGeneration(c.id_row-1, c.id_n+1);
+        c.ur_border = false;
+        getHCell(c.id_row-1, c.id_n+1).dl_border = false;
+      }
+      if(r == 1 && c.ul_cell.check == false)
+      {
+        hexagonMazeGeneration(c.id_row-1, c.id_n-1);
+        c.ul_border = false;
+        getHCell(c.id_row-1, c.id_n-1).dr_border = false;
+      }
+      if(r == 2 && c.l_cell.check == false)
+      {
+        hexagonMazeGeneration(c.id_row, c.id_n-2);
+        c.l_border = false;
+        getHCell(c.id_row, c.id_n-2).r_border = false;
+      }
+      if(r == 3 && c.r_cell.check == false)
+      {
+        hexagonMazeGeneration(c.id_row, c.id_n+2);
+        c.r_border = false;
+        getHCell(c.id_row, c.id_n+2).l_border = false;
+      }
+      if(r == 4 && c.dr_cell.check == false)
+      {
+        hexagonMazeGeneration(c.id_row+1, c.id_n+1);
+        c.dr_border = false;
+        getHCell(c.id_row+1, c.id_n+1).ul_border = false;
+      }
+      if(r == 5 && c.dl_cell.check == false)
+      {
+        hexagonMazeGeneration(c.id_row+1, c.id_n-1);
+        c.dl_border = false;
+        getHCell(c.id_row+1, c.id_n-1).ur_border = false;
+      }
+    }while(c.ur_cell.check == false || c.ul_cell.check == false || c.l_cell.check == false || c.r_cell.check == false || c.dr_cell.check == false || c.dl_cell.check == false);      
   }
   
   Cell getCellByPosition(int x, int y)
@@ -238,6 +507,16 @@ public class Maze
     return null;
   }
   
+  C_Hexagon getHCell(int id_row, int id_n)
+  {
+    for(int i=0; i<cells.size(); i++)
+      if(((C_Hexagon)(cells.get(i))).id_row == id_row && ((C_Hexagon)(cells.get(i))).id_n == id_n)
+        return (C_Hexagon)cells.get(i);
+    
+    println("Richiesta cella inesistente: ["+id_row+", "+id_n+"]");
+    return null;
+  }
+  
   boolean solved = false;
   void solveMaze()
   {
@@ -253,8 +532,13 @@ public class Maze
         solveSquareMaze((C_Square)c);
       if(type == 1)
         solveTriangularMaze((C_Triangle)c);
-        
-      println("Solved -> "+sol_points.size()+" steps long solution");
+      if(type == 2)
+        solveHexagonalMaze((C_Hexagon)c);
+      
+      if(type != 1)
+        println("Solved -> "+sol_points.size()+" steps long solution");
+      else
+        println("Solved -> "+(sol_points.size()*2-1)+" steps long solution");
     }
   }
   
@@ -309,17 +593,70 @@ public class Maze
     if(!c.h_cell.sol_check && !c.h_border)
       if(solveTriangularMaze((C_Triangle)c.h_cell))
       {
-        sol_points.add(new PVector(c.x, c.y));
+        if(!c.upside_down)
+          sol_points.add(new PVector(c.x, c.y));
         return true;
       }
     if(!c.l_cell.sol_check && !c.l_border)
       if(solveTriangularMaze((C_Triangle)c.l_cell))
       {
-        sol_points.add(new PVector(c.x, c.y));
+        if(!c.upside_down)
+          sol_points.add(new PVector(c.x, c.y));
         return true;
       }
     if(!c.r_cell.sol_check && !c.r_border)
       if(solveTriangularMaze((C_Triangle)c.r_cell))
+      {
+        if(!c.upside_down)
+          sol_points.add(new PVector(c.x, c.y));
+        return true;
+      }
+      
+    return false;
+  }
+  
+  boolean solveHexagonalMaze(C_Hexagon c)
+  {
+    c.sol_check = true;
+    
+    if(c.end)
+    {
+      sol_points.add(new PVector(c.x, c.y));
+      return true;
+    }
+    
+    if(!c.ur_cell.sol_check && !c.ur_border)
+      if(solveHexagonalMaze((C_Hexagon)c.ur_cell))
+      {
+        sol_points.add(new PVector(c.x, c.y));
+        return true;
+      }
+    if(!c.ul_cell.sol_check && !c.ul_border)
+      if(solveHexagonalMaze((C_Hexagon)c.ul_cell))
+      {
+        sol_points.add(new PVector(c.x, c.y));
+        return true;
+      }
+    if(!c.l_cell.sol_check && !c.l_border)
+      if(solveHexagonalMaze((C_Hexagon)c.l_cell))
+      {
+        sol_points.add(new PVector(c.x, c.y));
+        return true;
+      }
+    if(!c.r_cell.sol_check && !c.r_border)
+      if(solveHexagonalMaze((C_Hexagon)c.r_cell))
+      {
+        sol_points.add(new PVector(c.x, c.y));
+        return true;
+      }
+    if(!c.dr_cell.sol_check && !c.dr_border)
+      if(solveHexagonalMaze((C_Hexagon)c.dr_cell))
+      {
+        sol_points.add(new PVector(c.x, c.y));
+        return true;
+      }
+    if(!c.dl_cell.sol_check && !c.dl_border)
+      if(solveHexagonalMaze((C_Hexagon)c.dl_cell))
       {
         sol_points.add(new PVector(c.x, c.y));
         return true;
