@@ -1,6 +1,7 @@
 // DESC_TASK //
 Create a program that generates mazes.
 
+
 // DEADLINE //
 25-Oct-2018
 
