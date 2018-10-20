@@ -5,7 +5,7 @@ public enum b_type {
 public HashMap<b_type, Integer> colors = new HashMap<b_type, Integer>();
 
 class Biome {
-  static final float scale = 1.5;
+  static final float scale = 0.4;
   float str;
   b_type type;
 

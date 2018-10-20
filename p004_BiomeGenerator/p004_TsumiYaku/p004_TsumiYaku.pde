@@ -1,5 +1,5 @@
 int nuclei = 50;
-int scale = 10;
+int scale = 1;
 int cols;
 int rows;
 
@@ -10,7 +10,7 @@ float[][] s_map;
 
 
 void setup() {
-  size(800,800);
+  size(600, 600);
   noStroke();
   cols = floor(width/scale);
   rows = floor(height/scale);
@@ -48,7 +48,7 @@ void diffuse() { //generates the map expanding from the nuclei
         int distance = abs(i) + abs(j);
         int x = i + pos[k].x;
         int y = j + pos[k].y;
-        float str = biomes[k].str/(Biome.scale*distance);
+        float str = biomes[k].str/(pow(2, Biome.scale*distance));
         if(str > s_map[x][y]) {
           t_map[x][y] = biomes[k].type;
           s_map[x][y] = str;
