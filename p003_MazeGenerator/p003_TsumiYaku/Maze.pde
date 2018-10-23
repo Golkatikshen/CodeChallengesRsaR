@@ -6,6 +6,8 @@ class Maze {
   int wdh;
   int hgh;
   PVector[][] parents = new PVector[wdh][hgh];
+  Cell start;
+  Cell end;
   
   public Maze (int x, int y) { 
     wdh = x;
@@ -83,6 +85,8 @@ class Maze {
     int sy = (int)start.y;
     int ex = (int)end.x;
     int ey = (int)end.y;
+    this.start = cells[sx][sy];
+    this.end = cells[ex][ey];
     
     visit(cells[sx][sy], cells[sx][sy]);
     
@@ -108,10 +112,12 @@ class Maze {
         int cy = (int)c.pos.y;
         
         rect(cx*scale, cy*scale, scale, scale);
-      
       }
-      
     }
+    fill(0,0,255);
+    rect(start.pos.x*scale, start.pos.y*scale, scale, scale);
+    fill(255,0,0);
+    rect(end.pos.x*scale, end.pos.y*scale, scale, scale);
     
     for(int i = 0; i < wdh; i++)
       for(int j = 0; j < hgh; j++)

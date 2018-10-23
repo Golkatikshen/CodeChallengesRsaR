@@ -24,16 +24,16 @@ class Cell {
   public void wallDraw() {
     fill(255);
     if (walls.north)
-      rect(pos.x*scale, pos.y*scale, scale, 2);
+      rect(pos.x*scale, pos.y*scale, scale, 1);
       
     if (walls.south)
-      rect(pos.x*scale, (pos.y+1)*scale-2, scale, 2);
+      rect(pos.x*scale, (pos.y+1)*scale-1, scale, 1);
       
     if (walls.west)
-      rect(pos.x*scale, pos.y*scale, 2, scale);
+      rect(pos.x*scale, pos.y*scale, 1, scale);
       
     if (walls.east)
-      rect((pos.x+1)*scale-2, pos.y*scale, 2, scale);
+      rect((pos.x+1)*scale-1, pos.y*scale, 1, scale);
     }
   
 }
