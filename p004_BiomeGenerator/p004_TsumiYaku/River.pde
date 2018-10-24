@@ -1,5 +1,5 @@
-int good_chance = 8;
-int bad_chance = 4;
+int good_chance = 15;
+int bad_chance = 1;
 
 class River {
   int max_x;
@@ -9,6 +9,7 @@ class River {
   Coordinate start;
   Coordinate end;
   boolean found = false;
+  boolean dead = false;
   
   boolean[][] visited;
   Coordinate[][] parents;
@@ -44,28 +45,28 @@ class River {
       return;
     }
     
-    if(x < max_x && !visited[x+1-min_x][y-min_y]) {
+    if(x < max_x) {
       if (x < end.x)
         chance.put(dir.EAST, good_chance);
       else
         chance.put(dir.EAST, bad_chance);
     }
       
-    if(y < max_y && !visited[x-min_x][y+1-min_y]) {
+    if(y < max_y) {
       if (y < end.y)
         chance.put(dir.SOUTH, good_chance);
       else
         chance.put(dir.SOUTH, bad_chance);
     }
       
-    if(x > min_x && !visited[x-1-min_x][y-min_y]) {
+    if(x > min_x) {
       if (x > end.x)
         chance.put(dir.WEST, good_chance);
       else
         chance.put(dir.WEST, bad_chance);
     }
       
-    if(y > min_y && !visited[x-min_x][y-1-min_y]) {
+    if(y > min_y) {
       if (y > end.y)
         chance.put(dir.NORTH, 5);
       else
@@ -74,7 +75,11 @@ class River {
       
     for(int val: chance.values())
       tot_chance += val;
-      
+    
+    if(chance.size() == 0) {
+      return;
+    }
+    
     Coordinate next;
     while(tot_chance > 0) {
        for(dir k: chance.keySet()) {

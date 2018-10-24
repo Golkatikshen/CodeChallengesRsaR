@@ -1,12 +1,13 @@
-int nuclei = 50;
-float decay_rate = 0.08;
+int nuclei = 100;
+float decay_rate = 0.1;
 int scale = 5;
 int cols;
 int rows;
-int rivers = 10;
+int rivers = 5;
+int lakes = 10;
 
-Biome[] biomes = new Biome[nuclei];
-Coordinate[] pos = new Coordinate[nuclei];
+Biome[] biomes = new Biome[nuclei+lakes];
+Coordinate[] pos = new Coordinate[nuclei+lakes];
 b_type[][] t_map;
 float[][] s_map;
 
@@ -22,7 +23,7 @@ void setup() {
   colTable();
   biomePlace();
   biomeDiffuse();
-  riverPlace();
+  riverPlace(); //<>//
 }
 
 void draw() {
@@ -37,10 +38,17 @@ void biomePlace() { //places the biome nuclei on the map
     t_map[c.x][c.y] = biomes[i].type;
     s_map[c.x][c.y] = biomes[i].str;
   } 
+  for(int i = 0; i < lakes; i++) {
+    biomes[i+nuclei] = new Biome(random(100), b_type.WATER);
+    Coordinate c = new Coordinate(floor(random(cols)), floor(random(rows)));
+    pos[i+nuclei] = c;
+    t_map[c.x][c.y] = biomes[i+nuclei].type;
+    s_map[c.x][c.y] = biomes[i+nuclei].str;
+  } 
 }
 
 void biomeDiffuse() { //generates the map expanding from the nuclei
-  for(int k = 0; k < nuclei; k++)
+  for(int k = 0; k < nuclei+lakes; k++)
     for(int i = -pos[k].x; i < cols - pos[k].x; i++)
       for(int j = -pos[k].y; j < rows - pos[k].y; j++) {
         int distance = abs(i) + abs(j);
