@@ -1,3 +1,6 @@
+int good_chance = 8;
+int bad_chance = 4;
+
 class River {
   int max_x;
   int max_y;
@@ -5,6 +8,7 @@ class River {
   int min_y;
   Coordinate start;
   Coordinate end;
+  boolean found = false;
   
   boolean[][] visited;
   Coordinate[][] parents;
@@ -17,9 +21,9 @@ class River {
     this.start = start;
     this.end = end;
     
-    parents = new Coordinate[max_x-min_x][max_y-min_y];
-    visited = new boolean[max_x-min_x][max_y-min_y];
-    this.generate();
+    parents = new Coordinate[max_x-min_x+1][max_y-min_y+1];
+    visited = new boolean[max_x-min_x+1][max_y-min_y+1];
+    this.generate(); //<>//
   }
   
   private void generate() {
@@ -35,32 +39,31 @@ class River {
     visited[x-min_x][y-min_y] = true;
     parents[x-min_x][y-min_y] = prev;
     
-    if(x < max_x-1 && !visited[x+1][y]) {
+    if(x == end.x && y == end.y) {
+      found = true;
+      return;
+    }
+    
+    if(x < max_x && !visited[x+1][y]) {
       if (x < end.x)
-        chance.put(dir.EAST, 5);
+        chance.put(dir.EAST, good_chance);
       else
-        chance.put(dir.EAST, 1);
+        chance.put(dir.EAST, bad_chance);
     }
-    else
-      chance.put(dir.EAST, 0);
       
-    if(y < max_y-1 && !visited[x][y+1]) {
+    if(y < max_y && !visited[x][y+1]) {
       if (y < end.y)
-        chance.put(dir.SOUTH, 5);
+        chance.put(dir.SOUTH, good_chance);
       else
-        chance.put(dir.SOUTH, 1);
+        chance.put(dir.SOUTH, bad_chance);
     }
-    else
-      chance.put(dir.SOUTH, 0);
       
     if(x > min_x && !visited[x-1][y]) {
       if (x > end.x)
-        chance.put(dir.WEST, 5);
+        chance.put(dir.WEST, good_chance);
       else
-        chance.put(dir.WEST, 1);
+        chance.put(dir.WEST, bad_chance);
     }
-    else
-      chance.put(dir.WEST, 0);
       
     if(y > min_y && !visited[x][y-1]) {
       if (y > end.y)
@@ -68,31 +71,29 @@ class River {
       else
         chance.put(dir.NORTH, 1);
     }
-    else
-      chance.put(dir.NORTH, 0);
       
     for(int val: chance.values())
       tot_chance += val;
       
-    Coordinate next = null;
+    Coordinate next;
     while(tot_chance > 0) {
        for(dir k: chance.keySet()) {
          next = null;
          float r = random(1);
          
-         if (r < (float)chance.get(k)/(float)tot_chance) { //<>//
+         if (r < (float)chance.get(k)/(float)tot_chance) {
            tot_chance -= chance.get(k);
            chance.put(k, 0);
-           if(k == dir.NORTH)
+           if(k == dir.NORTH && !visited[x][y-1])
              next = new Coordinate(x, y-1);
-           if(k == dir.SOUTH)
+           if(k == dir.SOUTH && !visited[x][y+1])
              next = new Coordinate(x, y+1);
-           if(k == dir.EAST)
+           if(k == dir.EAST && !visited[x+1][y])
              next = new Coordinate(x+1, y);
-           if(k == dir.WEST)
+           if(k == dir.WEST && !visited[x-1][y])
              next = new Coordinate(x-1, y);
          }
-         if (next != null)
+         if (next != null && !found)
            visit(next, curr);
        }
     }    
@@ -115,6 +116,7 @@ class River {
     for(Coordinate c: riv) {
       rect(c.x*scale, c.y*scale, scale, scale); 
     }
+    rect(start.x*scale, start.y*scale, scale, scale);
   }
   
 }

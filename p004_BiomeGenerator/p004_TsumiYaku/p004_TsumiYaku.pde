@@ -1,6 +1,6 @@
 int nuclei = 50;
 float decay_rate = 0.08;
-int scale = 5;
+int scale = 10;
 int cols;
 int rows;
 
@@ -22,6 +22,7 @@ void setup() {
   colTable();
   place();
   riv = new River(new Coordinate(0,0), new Coordinate(cols-1, rows-1));
+  background(0);
 }
 
 void draw() {

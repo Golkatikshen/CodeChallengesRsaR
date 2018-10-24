@@ -1,5 +1,5 @@
 public enum b_type {
-  DESERT, PLAINS, MOUNTAIN, WATER, FOREST
+  DESERT, PLAINS, MOUNTAIN, FOREST, WATER
 };
 
 public HashMap<b_type, Integer> colors = new HashMap<b_type, Integer>();
