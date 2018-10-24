@@ -44,28 +44,28 @@ class River {
       return;
     }
     
-    if(x < max_x && !visited[x+1][y]) {
+    if(x < max_x && !visited[x+1-min_x][y-min_y]) {
       if (x < end.x)
         chance.put(dir.EAST, good_chance);
       else
         chance.put(dir.EAST, bad_chance);
     }
       
-    if(y < max_y && !visited[x][y+1]) {
+    if(y < max_y && !visited[x-min_x][y+1-min_y]) {
       if (y < end.y)
         chance.put(dir.SOUTH, good_chance);
       else
         chance.put(dir.SOUTH, bad_chance);
     }
       
-    if(x > min_x && !visited[x-1][y]) {
+    if(x > min_x && !visited[x-1-min_x][y-min_y]) {
       if (x > end.x)
         chance.put(dir.WEST, good_chance);
       else
         chance.put(dir.WEST, bad_chance);
     }
       
-    if(y > min_y && !visited[x][y-1]) {
+    if(y > min_y && !visited[x-min_x][y-1-min_y]) {
       if (y > end.y)
         chance.put(dir.NORTH, 5);
       else
@@ -84,13 +84,13 @@ class River {
          if (r < (float)chance.get(k)/(float)tot_chance) {
            tot_chance -= chance.get(k);
            chance.put(k, 0);
-           if(k == dir.NORTH && !visited[x][y-1])
+           if(k == dir.NORTH && !visited[x-min_x][y-1-min_y])
              next = new Coordinate(x, y-1);
-           if(k == dir.SOUTH && !visited[x][y+1])
+           if(k == dir.SOUTH && !visited[x-min_x][y+1-min_y])
              next = new Coordinate(x, y+1);
-           if(k == dir.EAST && !visited[x+1][y])
+           if(k == dir.EAST && !visited[x+1-min_x][y-min_y])
              next = new Coordinate(x+1, y);
-           if(k == dir.WEST && !visited[x-1][y])
+           if(k == dir.WEST && !visited[x-1-min_x][y-min_y])
              next = new Coordinate(x-1, y);
          }
          if (next != null && !found)
@@ -99,7 +99,7 @@ class River {
     }    
   }
   
-  public void riverDraw() {
+  public void place() {
     ArrayList<Coordinate> riv = new ArrayList<Coordinate>();
     
     Coordinate path = end;
@@ -112,11 +112,10 @@ class River {
       path = parent;
     }
     
-    fill(colors.get(b_type.WATER));
     for(Coordinate c: riv) {
-      rect(c.x*scale, c.y*scale, scale, scale); 
+      t_map[c.x][c.y] = b_type.WATER; 
     }
-    rect(start.x*scale, start.y*scale, scale, scale);
+    t_map[start.x][start.y] = b_type.WATER;
   }
   
 }
