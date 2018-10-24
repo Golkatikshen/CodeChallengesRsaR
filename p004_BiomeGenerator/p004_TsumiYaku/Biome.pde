@@ -1,5 +1,5 @@
 public enum b_type {
-  DESERT, PLAINS, MOUNTAIN, FOREST
+  DESERT, PLAINS, MOUNTAIN, WATER, FOREST
 };
 
 public HashMap<b_type, Integer> colors = new HashMap<b_type, Integer>();
@@ -9,10 +9,10 @@ void colTable() { //associates colors to biomes filling the HashMap
   colors.put(b_type.MOUNTAIN, #BFBEBD);
   colors.put(b_type.PLAINS, #25E800);
   colors.put(b_type.FOREST, #093601);
+  colors.put(b_type.WATER, #02E5D8);
 }
 
 class Biome {
-  static final float scale = 0.4;
   float str;
   b_type type;
 

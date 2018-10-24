@@ -24,6 +24,6 @@ void draw() {
 }
 
 void keyPressed() {
-  if(key == 's')
+  if(key == ' ')
     sol = !sol;
 }

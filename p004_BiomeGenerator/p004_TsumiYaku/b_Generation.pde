@@ -15,10 +15,18 @@ void diffuse() { //generates the map expanding from the nuclei
         int distance = abs(i) + abs(j);
         int x = i + pos[k].x;
         int y = j + pos[k].y;
-        float str = biomes[k].str/(pow(2, Biome.scale*distance));
+        float str = biomes[k].str/(pow(2, decay_rate*distance));
         if(str > s_map[x][y] || t_map[x][y] == null) {
           t_map[x][y] = biomes[k].type;
           s_map[x][y] = str;
         }
       }
+}
+
+void reset() {
+  for(int i = 0; i < cols; i ++)
+    for(int j = 0; j < rows; j++) {
+      t_map[i][j] = null;
+      s_map[i][j] = 0;
+    }
 }

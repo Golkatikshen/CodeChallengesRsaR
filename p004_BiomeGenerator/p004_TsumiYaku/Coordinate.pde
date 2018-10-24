@@ -1,3 +1,7 @@
+public enum dir {
+  NORTH, SOUTH, WEST, EAST 
+}
+
 class Coordinate {
   int x;
   int y;
