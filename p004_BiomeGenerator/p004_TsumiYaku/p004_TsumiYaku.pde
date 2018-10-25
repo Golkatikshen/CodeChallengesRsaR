@@ -1,10 +1,10 @@
 int nuclei = 100;
 float decay_rate = 0.1;
-int scale = 5;
+int scale = 2;
 int cols;
 int rows;
 int rivers = 5;
-int lakes = 10;
+int lakes = 5;
 
 Biome[] biomes = new Biome[nuclei+lakes];
 Coordinate[] pos = new Coordinate[nuclei+lakes];

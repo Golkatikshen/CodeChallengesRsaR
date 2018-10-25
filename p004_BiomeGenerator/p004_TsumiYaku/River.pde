@@ -1,5 +1,5 @@
-int good_chance = 15;
-int bad_chance = 1;
+int good_chance = 10;
+int bad_chance = 3;
 
 class River {
   int max_x;
