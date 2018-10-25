@@ -4,9 +4,10 @@ float village_decay = 0.5;
 int scale = 2;
 int cols;
 int rows;
-int rivers = floor(random(1, 6));
-int lakes = floor(random(2, 6));
-int villages = floor(random(5, 20));
+int rivers = floor(random(1, 10));
+int lakes = floor(random(2, 10));
+int villages = 20; //floor(random(5, 20));
+float chanceRatio = 0.88;
 
 Biome[] biomes = new Biome[nuclei+lakes];
 Coordinate[] pos = new Coordinate[nuclei+lakes];
@@ -77,17 +78,22 @@ void villagePlace() {
 
 Coordinate villageRandomPos() {  
   int x = -1, y = -1;
-  HashMap<b_type, Integer> chanceTable = villageChance();
+  HashMap<b_type, Integer> chanceTable = villageChanceTable();
   int totChance = 0;
   for(int val: chanceTable.values())
     totChance += val;
   
   while(x == -1 && y == -1) {
-    float chance = random(1);
+    float c = random(2);
     int tx = floor(random(cols));
     int ty = floor(random(rows));
+    float chance = (2*(float)chanceTable.get(t_map[tx][ty])/(float)totChance 
+        + 8*(1 - pow(((float)closestWater(new Coordinate(tx, ty))/(float)max(cols, rows)), 2)))/10;
+    //float chance = 1 - (float)closestWater(new Coordinate(tx, ty))/(float)max(cols, rows);
+    //if(chance > 0.847)
+    //  println(chance);
     
-    if(chance < (float)chanceTable.get(t_map[tx][ty])/(float)totChance) {
+    if(chance > chanceRatio) {
       x = tx;
       y = ty;
     }
@@ -96,16 +102,29 @@ Coordinate villageRandomPos() {
   return new Coordinate(x, y);
 }
 
-HashMap<b_type, Integer> villageChance() {
+HashMap<b_type, Integer> villageChanceTable() {
   HashMap<b_type, Integer> chanceTable = new HashMap<b_type, Integer>();
   
   chanceTable.put(b_type.DESERT, 1);
   chanceTable.put(b_type.MOUNTAIN, 1);
-  chanceTable.put(b_type.WATER, 15);
-  chanceTable.put(b_type.PLAINS, 3);
-  chanceTable.put(b_type.FOREST, 2);
+  chanceTable.put(b_type.WATER, 0);
+  chanceTable.put(b_type.PLAINS, 5);
+  chanceTable.put(b_type.VILLAGE, 0);
+  chanceTable.put(b_type.FOREST, 3);
   
   return chanceTable;
+}
+
+int closestWater(Coordinate c) {
+   for(int k = 0; k < max(cols, rows); k++) 
+    for(int i = -k; i <= k; i++)
+      for(int j = -k; j <= k; j++) {
+        if(abs(i)+abs(j) == k)
+          if(c.x + i >= 0 && c.x + i < cols && c.y + j >= 0 && c.y + j < rows)
+            if(t_map[c.x+i][c.y+j] == b_type.WATER)
+              return k;
+      }
+    return max(cols, rows);
 }
 
 void colorMap() {

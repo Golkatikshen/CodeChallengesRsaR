@@ -28,11 +28,12 @@ class River {
   }
   
   private void generate() {
-    this.visit(start, start);    
+    this.visit(start, start, 0);    
   }
   
-  private void visit(Coordinate curr, Coordinate prev) {
+  private void visit(Coordinate curr, Coordinate prev, int n) {
     HashMap<dir, Integer> chance = new HashMap<dir, Integer>();
+    int maxRec = floor(max(cols, rows)*3.5);
     
     int x = curr.x;
     int y = curr.y;
@@ -41,6 +42,11 @@ class River {
     parents[x-min_x][y-min_y] = prev;
     
     if(x == end.x && y == end.y) {
+      found = true;
+      return;
+    }
+    if(n == maxRec) {
+      end = curr;
       found = true;
       return;
     }
@@ -99,7 +105,7 @@ class River {
              next = new Coordinate(x-1, y);
          }
          if (next != null && !found)
-           visit(next, curr);
+           visit(next, curr, n+1);
        }
     }    
   }
