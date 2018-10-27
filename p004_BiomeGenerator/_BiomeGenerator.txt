@@ -2,7 +2,7 @@
 Create a program that generates a 2D map with biomes.
 --Micro tasks:
 -Subdivision of the world map in biomes in whichever way you want.
--Enrichment of world map with "not totally random generated" rivers. (Rivers
+-Enrichment of world map with "not totally random generated" rivers. (Rivers have less probability to flow in a desert-like biome).
 -Spawn of villages in a probable manner. (A village has less probability of spawning in the desert than to spawn near a river).
 
 
