@@ -10,8 +10,7 @@ void setup()
   size(600, 500);
   strokeWeight(4);
   
-  //7497 lot of lakes
-  generate(7497);
+  generate();
   
   textSize(15);
 }
