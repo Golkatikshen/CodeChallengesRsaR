@@ -1,0 +1,10 @@
+// DESC_TASK //
+Create a program that simulates the light propagation and the casting of shadows in 2D.
+
+
+// DEADLINE //
+31-Dec-2018
+
+
+// CONSTRAINTS //
+None
