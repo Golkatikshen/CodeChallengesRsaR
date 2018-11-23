@@ -69,3 +69,41 @@ float[][] generateSigGreyMap(float noiseScale, int octaves, float falloff) {
 
   return greyMap;
 }
+
+float[][] generateCitiesMap(int size, float greyMap[][],float[][] heatMap, float seaLevel) {
+  float[][] probabilityMap = new float[size][size];
+  float tmpRes;
+  for(int i = 0; i<size; i++) {
+    for(int j = 0; j<size; j++) {
+      if(int(random(5000))==1) {
+        tmpRes = 1;
+        tmpRes *= ceil(greyMap[i][j] - seaLevel);
+        tmpRes *= gauss(greyMap[i][j], 1.2, 0, 6);
+        tmpRes *= gauss(heatMap[i][j], 2, -0.5, 4);
+        probabilityMap[i][j] = tmpRes;
+      }
+      else
+        probabilityMap[i][j] = 0;
+    }  
+  }
+  return probabilityMap;
+}
+
+float[][] generateSpringMap(int size, float greyMap[][],float[][] heatMap, float seaLevel) {
+  float[][] probabilityMap = new float[size][size];
+  float tmpRes;
+  for(int i = 0; i<size; i++) {
+    for(int j = 0; j<size; j++) {
+      if(int(random(500))==1) {
+        tmpRes = 1;
+        tmpRes *= ceil(greyMap[i][j] - seaLevel);
+        tmpRes *= gauss(greyMap[i][j], 2.5, -1, 4);
+        tmpRes *= gauss(heatMap[i][j], 1.2, -1, 6);
+        probabilityMap[i][j] = tmpRes;
+      }
+      else
+        probabilityMap[i][j] = 0;
+    }  
+  }
+  return probabilityMap;
+}

@@ -58,48 +58,11 @@ float[][] ridgeFilter(float[][] greyMap) {
       ridgeMap[i][j]-=0.5;
       ridgeMap[i][j] = abs(ridgeMap[i][j])*-1 + 0.5;
       ridgeMap[i][j] += greyMap[i][j];
-      ridgeMap[i][j] = norm(ridgeMap[i][j],0,1.5);
+      ridgeMap[i][j] = norm(ridgeMap[i][j], 0, 1.5);
     }
   }
   return ridgeMap;
 }
-
-
-
-/*
-Biome[] selectBiomes(Biome[] biomes, int x, int y) {
- Biome[] selectedBiomes = new Biome[2];
- float highestVal = 0, secondHighestVal = 0, noiseVal;
- for (int i = 0; i<biomes.length;i++) {
- noiseVal = biomes[i].getNoiseValue(y,x);
- if (noiseVal>highestVal) {
- selectedBiomes[1] = selectedBiomes[0];
- selectedBiomes[0] = biomes[i];
- secondHighestVal = highestVal;
- highestVal = noiseVal;
- }
- else if (noiseVal > secondHighestVal) {
- selectedBiomes[1] = biomes[i];
- secondHighestVal = noiseVal;
- }
- }
- return selectedBiomes;
- }
- */
-/*
-color biomeFinalColor(Biome[] bList, int x, int y, int squareDim, float altitude) {
- color[] biomeColors = new color[bList.length];
- float[] coeffValues = new float[bList.length];
- for (int b = 0; b<bList.length; b++) {
- biomeColors[b] = colorAtAltitude(bList[b].heights, altitude);
- coeffValues[b] = sig(bList[b].rescaledBiomeMap(squareDim)[y][x]);
- }
- //trova i colori dei due biomi principali in corrispondenza di altitude
- color blended = colorMean(biomeColors, coeffValues);
- return blended;
- }
- */
-
 
 color colorAtAltitude(BiomeHeight[] bh, float altitude) {
   for (int h = 0; h<bh.length; h++) {
@@ -124,6 +87,43 @@ Biome[] biomeAtHeat(Biome[] biomes, float heat) {//lo 0 è il bioma superiore, l
   marginBiomes[0] = biomes[biomes.length-2];
   marginBiomes[1] = biomes[biomes.length-1];
   return marginBiomes;
+}
+
+River digRiver(float greyMap[][], float seaLevel, int springX, int springY) {
+  ArrayList<Point> points = new ArrayList<Point>();
+  float altitude = greyMap[springY][springX], prevAlt;
+  int size = greyMap.length;
+  int outfall = 0;
+  int gradX = 0, gradY = 0;
+  while(altitude>seaLevel && outfall != 1 ) {
+    prevAlt = altitude;
+    for(int i = springY-1; i<springY+2;i++) {
+      for(int j = springX-1; j<springX+2;j++) {
+        if(i<size && j<size && i>=0 && j>=0 && i!=springY && j!=springX) {
+          if(greyMap[i][j]<altitude) {
+            altitude = greyMap[i][j];
+            gradX = j;
+            gradY = i;
+          }
+        }
+      }
+    }
+    springX = gradX;
+    springY = gradY;
+    if(prevAlt==altitude)
+      break;
+    points.add(new Point(gradX, gradY));
+    if(altitude<seaLevel)
+      outfall = 1;
+  }
+  if(outfall == 1) {
+    return new River(points.toArray(new Point[0]));  
+  }
+  else {
+    Point[] tmpPunti = new Point[0];
+    return new River(tmpPunti);
+  }
+  
 }
 
 color colorMean(color[] colors, float[] coeffs) {
@@ -160,6 +160,12 @@ float colorDistance(color c1, color c2) {
   return sqrt(dm);
 }
 
+String randomName(String[] prefixes, String[] suffixes) {
+  String pre = prefixes[int(random(prefixes.length))];
+  String suf = suffixes[int(random(suffixes.length))];
+  return pre+suf;
+}
+
 float sig(float x) {
   return -1/(1 + exp(10*x - 5)) + 1;
 }
@@ -167,8 +173,8 @@ float sigSmall(float x) {
   return -1/(1 + exp(100*x - 90)) + 1;
 }
 
-float gauss(float x) {
-  return exp(-1*pow(6*(x-0.5),4));
+float gauss(float x, float a, float o, float p) {
+  return exp(-1*pow(a*(x+o), p));
 }
 
 float isl(float x) {

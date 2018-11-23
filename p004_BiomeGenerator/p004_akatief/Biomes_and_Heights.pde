@@ -61,3 +61,11 @@ Biome[] biomesList = {new Biome(jungle, 1),
 */
                   // BiomeHeatMap(Biome[] bm, float nS, int oct, float fo) {
 BiomeHeatMap BHeat;// = new BiomeHeatMap(biomesList, noiseScale/5, 10, 0.5);
+
+
+
+
+String[] prefixes = {"Ochai", "Ri", "Vlom", "Zrox", "Ta", "Brin", "Oit", "Ester", "Anu", "Yhu", "Egie", "Frog", "Lace", "Kha", "Bro", "Aka", "Ona" };
+
+String[] suffixes = {"lens", "rough", "burgh", "sea", "vine", "as", "vance", "chanbu", "phis", "ver", "dence", "gate", "ford", "inia", "ster", "cont", "gos", "ln", "bury", "tin"};
+                     

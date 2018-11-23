@@ -74,3 +74,39 @@ color colorMean(color c1, color c2, float v1, float v2) {
       
       colorMap[i][j] = colorMean(c1,c2,selectedBiomesList[0].getNoiseValue(i*squareDim,j*squareDim) ,selectedBiomesList[1].getNoiseValue(i*squareDim,j*squareDim));
       */
+      
+      
+
+/*
+Biome[] selectBiomes(Biome[] biomes, int x, int y) {
+ Biome[] selectedBiomes = new Biome[2];
+ float highestVal = 0, secondHighestVal = 0, noiseVal;
+ for (int i = 0; i<biomes.length;i++) {
+ noiseVal = biomes[i].getNoiseValue(y,x);
+ if (noiseVal>highestVal) {
+ selectedBiomes[1] = selectedBiomes[0];
+ selectedBiomes[0] = biomes[i];
+ secondHighestVal = highestVal;
+ highestVal = noiseVal;
+ }
+ else if (noiseVal > secondHighestVal) {
+ selectedBiomes[1] = biomes[i];
+ secondHighestVal = noiseVal;
+ }
+ }
+ return selectedBiomes;
+ }
+ */
+/*
+color biomeFinalColor(Biome[] bList, int x, int y, int squareDim, float altitude) {
+ color[] biomeColors = new color[bList.length];
+ float[] coeffValues = new float[bList.length];
+ for (int b = 0; b<bList.length; b++) {
+ biomeColors[b] = colorAtAltitude(bList[b].heights, altitude);
+ coeffValues[b] = sig(bList[b].rescaledBiomeMap(squareDim)[y][x]);
+ }
+ //trova i colori dei due biomi principali in corrispondenza di altitude
+ color blended = colorMean(biomeColors, coeffValues);
+ return blended;
+ }
+ */

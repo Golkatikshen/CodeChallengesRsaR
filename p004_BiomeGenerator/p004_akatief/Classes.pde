@@ -16,6 +16,22 @@ class Biome {
   }
 }
 
+class Point {
+  int y;
+  int x;
+  Point(int i, int j) {
+    y = i;
+    x = j;
+  }
+}
+
+class River {
+  Point points[];
+  River(Point pts[]) {
+    points = pts;
+  }
+}
+
 class BiomeHeatMap {
   Biome[] biomes;
   float[][] heatMap = new float[canvasSizeY][canvasSizeX];
