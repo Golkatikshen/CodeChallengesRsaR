@@ -34,5 +34,10 @@ class Punto{
   Punto addiz(float a, float b, Punto p){ //a*this + b*p
     return new Punto(a*x +b*p.x, a*y + b*p.y);
   }
+  /*
+  boolean is_out_of_screen(){
+    return (x>=1280 || x<0 || y>=720 || y<0);
+  }
+  */
   
 }

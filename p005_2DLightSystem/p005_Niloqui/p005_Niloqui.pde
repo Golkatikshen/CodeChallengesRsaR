@@ -1,3 +1,7 @@
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.stream.*;
+
 ArrayList<Luce> luci = new ArrayList();
 ArrayList<Punto> punti = new ArrayList();
 // ArrayList<Punto> punti_costruzione = new ArrayList();
@@ -5,10 +9,11 @@ ArrayList<Punto> punti = new ArrayList();
 ArrayList<Linea> linee = new ArrayList();
 ArrayList<Linea> linee_costruzione = new ArrayList();
 
-boolean cambiamenti = true, drawmode = false;
+boolean cambiamenti = true, drawmode = false, lightmode = false;
+// lightmode => Una luce segue il percorso del mouse
 Punto temp, temp2, temp3, temp4;
 char cartemp;
-final boolean DEBUG = true;
+final boolean DEBUG = false;
 
 void setup(){
   size(1280, 720); // NON CAMBIARE QUESTI VALORI
@@ -25,11 +30,13 @@ void reset(boolean hardReset){
   background(20, 20, 20);
   
   if(hardReset){
+    int dist = 2; // distanza dal bordo dello schermo
+    
     Punto pippo[] = new Punto[4];
-    punti.add(pippo[0] = new Punto(-1, -1));
-    punti.add(pippo[1] = new Punto(-1, 720));
-    punti.add(pippo[2] = new Punto(1280, 720));
-    punti.add(pippo[3] = new Punto(1280, -1));
+    punti.add(pippo[0] = new Punto(0 - dist, 0 - dist));
+    punti.add(pippo[1] = new Punto(0 - dist, 719 + dist));
+    punti.add(pippo[2] = new Punto(1279 + dist, 719 + dist));
+    punti.add(pippo[3] = new Punto(1279 + dist, 0 - dist));
     
     linee.add(new Linea(pippo[0], pippo[1]));
     linee.add(new Linea(pippo[1], pippo[2]));
@@ -65,7 +72,7 @@ void set_valori_disegno(char param){
     break;
     
   case 'd': // Singoli punti, debug mode only
-    strokeWeight(2);
+    strokeWeight(6);
     stroke(0, 0, 255);
     fill(0, 255, 0);
     break;
@@ -74,6 +81,11 @@ void set_valori_disegno(char param){
 
 
 void draw(){
+  if(lightmode){
+    temp.x = mouseX;
+    temp.y = mouseY;
+    cambiamenti = true;
+  }
   if(cambiamenti || drawmode){ // Se sono state apportate modifiche ridisegna lo schermo
     cambiamenti = false;
     reset(false);
@@ -95,15 +107,15 @@ void draw(){
       
       for(i=0; i<N; i++){
         p = punti.get(i);
-        ellipse( p.x, p.y, 8, 8);
+        ellipse(p.x, p.y, 2, 2);
       }
     }
     
     // Disegna luci
-    set_valori_disegno('s');
     N = luci.size();
     
     for(i=0; i<N; i++){
+      set_valori_disegno('s');
       luci.get(i).disegna(drawmode);
     }
     
@@ -143,21 +155,38 @@ void draw(){
 }
 // ---- Fine funzione draw()
 
+void keyReleased(){
+  if(key == 'f' && lightmode){ // Una luce segue il percorso del mouse
+    lightmode = false;
+    luci.remove( luci.size() - 1 );
+    cambiamenti = true;
+  }
+}
 
 
 void keyPressed(){
-  if(key == 'c'){ // clear
+  if(key == 'c' && !lightmode){ // clear
     cambiamenti = true;
     luci.clear();
     linee.clear();
     punti.clear();
     linee_costruzione.clear();
-    reset(true); // Viene già eseguita nel draw
+    reset(true); // Nel draw viene eseguito il reset 'debole'
+  }
+  else if(key == 'x' && !lightmode){ // Toglie solo le luci
+    cambiamenti = true;
+    luci.clear();
+  }
+  else if(key == 'f' && !lightmode){ // Una luce segue il percorso del mouse
+    lightmode = true;
+    cambiamenti = true;
+    temp = new Punto(mouseX, mouseY);
+    luci.add( new Luce(temp) );
   }
 }
 
 void mousePressed(){
-  if(mouseButton == LEFT){
+  if(mouseButton == LEFT && !lightmode){
     cambiamenti = true;
     Punto vet[];
     int i, j;
@@ -340,7 +369,7 @@ void controlla_intersezione_linee(ArrayList<Linea> linee,
                                   ArrayList<Linea> linee_costruzione){
    int j, Nj = linee.size();
    Linea test, lin;
-   boolean fine_ciclo=false; //<>//
+   boolean fine_ciclo=false;
    
    if( !linee_costruzione.isEmpty() ){
      test = linee_costruzione.remove(0);
@@ -356,8 +385,8 @@ void controlla_intersezione_linee(ArrayList<Linea> linee,
        
        if( test.inter(lin, temp, temp2) ){
          
-         if( (temp2.y == -1) && (temp.x != -1) ){
-           linee.remove(j); // linee.remove(lin); //<>//
+         if( (temp2.y == -10) && (temp.x != -10) ){
+           linee.remove(j); // linee.remove(lin);
            temp = trova_punto_eo_aggiungi(temp.x, temp.y, punti, true);
            
            if( temp.equals(test.p1) ){
@@ -406,7 +435,7 @@ void controlla_intersezione_linee(ArrayList<Linea> linee,
            }
            else{ // test non è uguale a nessun altro punto => linee non parallele
              // linee.remove(j); // linee.remove(lin);
-             // temp = trova_punto_eo_aggiungi(temp.x, temp.y, punti, true); //<>//
+             // temp = trova_punto_eo_aggiungi(temp.x, temp.y, punti, true);
              
              linee.add(new Linea(temp, lin.p1));
              linee.add(new Linea(temp, lin.p2));
@@ -416,7 +445,7 @@ void controlla_intersezione_linee(ArrayList<Linea> linee,
              fine_ciclo = true;
            }
          }
-         else if( temp2.x != -1 ){
+         else if( temp2.x != -10 ){
            // Le due linee si trovano sulla stessa retta e vanno divise in tre
            // linee distinte
            
@@ -489,7 +518,7 @@ void controlla_intersezione_linee(ArrayList<Linea> linee,
            // lista linee_costruzione e non bisogna reinserirla nella lista linee
          }
          */
-       } //<>//
+       }
      }
      
      if(j>=Nj && !fine_ciclo){
