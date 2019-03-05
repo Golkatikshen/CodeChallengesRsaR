@@ -1,0 +1,20 @@
+-installare git
+-aprire la console git 
+-spostatevi con i comandi cd nella cartella in cui mettere la repo 
+-git clone <url repo>
+Poi a questo punto dentro la cartella che avete precedentemente scelto ci sarà l'intera repo (quindi anche i progetti degli altri) e quindi dovrete mettere i vostri progetti lì dentro
+
+Quando modificate o aggiungete un file dovete fare questa sequenza di comandi per aggiornare la repo (occhio a non cancellare i file degli altri perché se no li togliete proprio dalla repo):
+-git add -A
+-git commit -m "commento"
+-git push
+
+Ogni tanto fare anche 
+git pull
+Perché così aggiornate la vostra cartella locale con tutti gli aggiornamenti anche degli altri
+
+Se modificate qualcosa in locale e poi volete annullare le modifiche potete fare: git stash
+
+Anche git status è utile perché vi mostra quali avete diversi da quelli della repo online
+
+https://github.com/Golkatikshen/CodeChallengesRsaR
