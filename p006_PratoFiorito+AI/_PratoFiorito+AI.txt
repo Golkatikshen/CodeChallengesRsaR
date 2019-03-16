@@ -1,0 +1,7 @@
+// DESC_TASK //
+Recreate the famous Minesweeper game:
+- Have to be playable by an user
+- Create an AI that plays the game
+
+// CONSTRAINTS //
+The first cell clicked MUST be mine-free.
