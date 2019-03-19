@@ -4,4 +4,4 @@ Recreate the famous Minesweeper game:
 - Create an AI that plays the game
 
 // CONSTRAINTS //
-The first cell clicked MUST be mine-free.
+The first cell clicked MUST be without surrounding mines!
