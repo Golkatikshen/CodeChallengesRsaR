@@ -10,10 +10,10 @@ Button n_col_button;
 Button n_row_button;
 Button exit_button;
 
-int seed = (int)random(1000, 10000); //Il seed funziona ovviamente solo se si clicca la stessa prima casella durante la partita.
+int seed = (int)random(10000, 100000); //Il seed funziona ovviamente solo se si clicca la stessa prima casella durante la partita.
 int diff = 0;
-int n_col = 10;
-int n_row = 8;
+int n_col = 22;
+int n_row = 16;
 String infos = "Clicca su Seed per randomizzare.\nClicca su Mode per cambiare il livello di difficoltà.\nScorri la rotellina del mouse su X e Y per cambiare la dimensione della griglia.";
 
 MineSweeper MS;

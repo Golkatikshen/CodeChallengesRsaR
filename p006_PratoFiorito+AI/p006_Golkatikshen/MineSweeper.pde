@@ -37,13 +37,16 @@ class MineSweeper
         
     textSize(15);
     fill(255);
+    textAlign(LEFT);
     if(game_started)
     {
-      text("Num mines: "+tot_mines, 55, 15);
-      text("Num probable mines: "+num_probable_mines, 90, 35);
+      text("Num mines: "+tot_mines, 5, 20);
+      text("Num probable mines: "+num_probable_mines, 5, 40);
+      text("Right click to toggle flag", 5, 60);
     }
     if(end_game)
-      text("Premi B per tornare al menù.", 110, 575);
+      text("Premi B per tornare al menù.", 5, 590);
+    textAlign(CENTER, CENTER);
     textSize(size_q*0.9);
   }
   
@@ -66,14 +69,17 @@ class MineSweeper
   {
     for(int i=0; i<n_row; i++)
       for(int j=0; j<n_col; j++)
-        if(cells[i][j].mouseHover())
-          num_probable_mines += cells[i][j].toggleProbableMine();
+        if(cells[i][j].mouseHover() && !cells[i][j].unveiled)
+          cells[i][j].toggleProbableMine();
+          
+    calcNumFlag();
   }
   
   void checkVictory()
   {
     if(tot_mines == calcNumVeiled())
     {
+      end_game = true;
       for(int i=0; i<n_row; i++)
         for(int j=0; j<n_col; j++)
           cells[i][j].endGame(true);
@@ -101,6 +107,7 @@ class MineSweeper
     else
       recursivelyUnveil(y, x);
       
+    calcNumFlag();
     checkVictory();
   }
   
@@ -200,6 +207,17 @@ class MineSweeper
           count ++;
           
     return count;
+  }
+  
+  void calcNumFlag()
+  {
+    int count = 0;
+    for(int i=0; i<n_row; i++)
+      for(int j=0; j<n_col; j++)
+        if(cells[i][j].probable_mine && !cells[i][j].unveiled)
+          count ++;
+          
+    num_probable_mines = count;
   }
   
   //Calcola il numero di mine vicine per ogni cella

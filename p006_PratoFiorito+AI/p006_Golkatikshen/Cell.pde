@@ -40,9 +40,26 @@ class Cell
       
       if(!is_mine)
       {
-        fill(10);
         if(num_mines != 0)
+        {
+          if(num_mines == 1)
+            fill(0, 10, 255);
+          if(num_mines == 2)
+            fill(20, 200, 20);
+          if(num_mines == 3)
+            fill(220, 0, 0);
+          if(num_mines == 4)
+            fill(0, 0, 150);
+          if(num_mines == 5)
+            fill(112, 0, 0);
+          if(num_mines == 6)
+            fill(15, 114, 175);
+          if(num_mines == 7)
+            fill(10);
+          if(num_mines == 8)
+            fill(130);
           text(num_mines, x+size_q/2, y+size_q/2-off_y);
+        }
       }
 
       if(end_game && is_mine)
@@ -57,9 +74,9 @@ class Cell
     else
     {
       if(darker)
-        fill(120);
+        fill(100);
       else
-        fill(150);
+        fill(120);
       rect(x, y, size_q, size_q);
       
       if(probable_mine)
@@ -88,6 +105,6 @@ class Cell
   
   boolean mouseHover()
   {
-    return ((mouseX > x && mouseX < x+size_q) && (mouseY > y && mouseY < y+size_q));
+    return ((mouseX > x && mouseX <= x+size_q) && (mouseY > y && mouseY <= y+size_q));
   }
 }
