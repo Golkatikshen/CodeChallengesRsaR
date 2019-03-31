@@ -1,6 +1,6 @@
 
 boolean menu = true;
-float size_q = 30;
+float size_q = 10;
 
 Button play_button;
 Button ai_button;
@@ -12,12 +12,13 @@ Button exit_button;
 
 int seed = (int)random(10000, 100000); //Il seed funziona ovviamente solo se si clicca la stessa prima casella durante la partita.
 int diff = 0;
-int n_col = 22;
-int n_row = 16;
+int n_col = 44;
+int n_row = 42;
 String infos = "Clicca su Seed per randomizzare.\nClicca su Mode per cambiare il livello di difficoltà.\nScorri la rotellina del mouse su X e Y per cambiare la dimensione della griglia.";
 
 MineSweeper MS;
 
+//SEED TO CHECK 48671
 void setup()
 {
   size(800, 600);
@@ -79,7 +80,7 @@ void mousePressed()
       
     if(randomize_seed_button.mouseHover())
     {
-      seed = (int)random(1000, 10000);
+      seed = (int)random(10000, 100000);
       randomize_seed_button.str = "Seed: "+String.valueOf(seed);
     }
     
@@ -136,4 +137,10 @@ void keyPressed()
 {
   if(key == 'b' || key == 'B')
     menu = true;
+    
+  if(key == 'x')
+    MS.checkForSureMines();
+    
+  if(key == 'c')
+    MS.checkForSureFreeCells();
 }

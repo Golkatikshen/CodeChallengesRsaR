@@ -10,7 +10,8 @@ class Cell
   boolean end_game;
   boolean culprit;
   boolean win;
-  boolean probable_mine;
+  boolean flag;
+  boolean anti_flag;
   
   Cell(float _x, float _y, boolean _darker)
   {
@@ -23,7 +24,8 @@ class Cell
     end_game = false;
     culprit = false;
     win = false;
-    probable_mine = false;
+    flag = false;
+    anti_flag = false;
   }
   
   void display()
@@ -79,7 +81,7 @@ class Cell
         fill(120);
       rect(x, y, size_q, size_q);
       
-      if(probable_mine)
+      if(flag)
       {
         fill(0, 0, 200);
         ellipse(x+size_q/2, y+size_q/2, size_q*0.6, size_q*0.6);
@@ -94,13 +96,23 @@ class Cell
     win = victory;
   }
   
-  int toggleProbableMine()
+  int toggleFlagMine()
   {
-    probable_mine = !probable_mine;
-    if(probable_mine)
+    flag = !flag;
+    if(flag)
       return 1;
     else
       return -1;
+  }
+  
+  void setFlagMine()
+  {
+    flag = true;
+  }
+  
+  void setAntiFlagMine()
+  {
+    anti_flag = true;
   }
   
   boolean mouseHover()
