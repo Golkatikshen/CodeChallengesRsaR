@@ -43,11 +43,18 @@ class MineSweeper
       text("Num mines: "+tot_mines, 5, 20);
       text("Num probable mines: "+num_flagged_mines, 5, 40);
       text("Right click to toggle flag", 5, 60);
+      text((mouseX-mouseX%10)+", "+(mouseY-mouseY%10), 5, 100);
+      text(cell_infos, 5, 150);
     }
     if(end_game)
       text("Premi B per tornare al menù.", 5, 590);
     textAlign(CENTER, CENTER);
     textSize(size_q*0.9);
+    
+    for(int i=0; i<n_row; i++)
+      for(int j=0; j<n_col; j++)
+        if(cells[i][j].mouseHover())
+          cell_infos = cells[i][j].getInfos(isVeiledCloseToUnveiledNumber(i,j,1));
   }
   
   void click()
@@ -56,7 +63,7 @@ class MineSweeper
       for(int i=0; i<n_row; i++)
         for(int j=0; j<n_col; j++)
         {
-          if(cells[i][j].mouseHover())
+          if(cells[i][j].mouseHover() && !cells[i][j].flag)
           {
             if(!game_started)
               startGame(i, j);
@@ -88,6 +95,7 @@ class MineSweeper
   
   void startGame(int y, int x)
   {
+    println(x, y, n_col, n_row, diff);
     game_started = true;
     placeMines(y, x);
     calcNumCloseMines();
@@ -262,56 +270,145 @@ class MineSweeper
       }
   }
   
+  int getNearVeiledCells(int i, int j)
+  {
+    int count = 0;
+        
+    if(i!=0)
+      if(!cells[i-1][j].unveiled)
+        count++;
+        
+    if(i!=n_row-1)
+      if(!cells[i+1][j].unveiled)
+        count++;
+        
+    if(j!=0)
+      if(!cells[i][j-1].unveiled)
+        count++;
+        
+    if(j!=n_col-1)
+      if(!cells[i][j+1].unveiled)
+        count++;
+        
+    if(i!=0 && j!=0)
+      if(!cells[i-1][j-1].unveiled)
+        count++;
+        
+    if(i!=n_row-1 && j!=0)
+      if(!cells[i+1][j-1].unveiled)
+        count++;
+        
+    if(i!=0 && j!=n_col-1)
+      if(!cells[i-1][j+1].unveiled)
+        count++;
+        
+    if(i!=n_row-1 && j!=n_col-1)
+      if(!cells[i+1][j+1].unveiled)
+        count++;
+        
+    return count;
+  }
+  
+  int getNearFlaggedMines(int i, int j)
+  {
+    int count = 0;
+          
+    if(i!=0)
+      if(cells[i-1][j].flag)
+        count++;
+        
+    if(i!=n_row-1)
+      if(cells[i+1][j].flag)
+        count++;
+        
+    if(j!=0)
+      if(cells[i][j-1].flag)
+        count++;
+        
+    if(j!=n_col-1)
+      if(cells[i][j+1].flag)
+        count++;
+        
+    if(i!=0 && j!=0)
+      if(cells[i-1][j-1].flag)
+        count++;
+        
+    if(i!=n_row-1 && j!=0)
+      if(cells[i+1][j-1].flag)
+        count++;
+        
+    if(i!=0 && j!=n_col-1)
+      if(cells[i-1][j+1].flag)
+        count++;
+        
+    if(i!=n_row-1 && j!=n_col-1)
+      if(cells[i+1][j+1].flag)
+        count++;
+        
+    return count;
+  }
+  
+  //Ritorna true se questa casella coperta ha vicino una casella
+  //scoperta con n_mines = n
+  boolean isVeiledCloseToUnveiledNumber(int i, int j, int n)
+  {
+    if(i<0 || i>=n_row || j<0 || j>=n_col || cells[i][j].unveiled)
+      return false;
+      
+    boolean it_is = false;
+          
+    if(i!=0)
+      if(cells[i-1][j].num_mines == n && cells[i-1][j].unveiled)
+        it_is = true;
+        
+    if(i!=n_row-1)
+      if(cells[i+1][j].num_mines == n && cells[i+1][j].unveiled)
+        it_is = true;
+        
+    if(j!=0)
+      if(cells[i][j-1].num_mines == n && cells[i][j-1].unveiled)
+        it_is = true;
+        
+    if(j!=n_col-1)
+      if(cells[i][j+1].num_mines == n && cells[i][j+1].unveiled)
+        it_is = true;
+        
+    if(i!=0 && j!=0)
+      if(cells[i-1][j-1].num_mines == n && cells[i-1][j-1].unveiled)
+        it_is = true;
+        
+    if(i!=n_row-1 && j!=0)
+      if(cells[i+1][j-1].num_mines == n && cells[i+1][j-1].unveiled)
+        it_is = true;
+        
+    if(i!=0 && j!=n_col-1)
+      if(cells[i-1][j+1].num_mines == n && cells[i-1][j+1].unveiled)
+        it_is = true;
+        
+    if(i!=n_row-1 && j!=n_col-1)
+      if(cells[i+1][j+1].num_mines == n && cells[i+1][j+1].unveiled)
+        it_is = true;
+        
+    return it_is;
+  }
+  
   
   //AI +-+-+-+-+-+-+-+-+-+-+-+
   
   void stepAI()
   {
     checkForSureMines();
+    checkForSureFreeCells();
   }
+  
   
   void checkForSureFreeCells()
   {
-    int count = 0;
     for(int i=0; i<n_row; i++)
       for(int j=0; j<n_col; j++)
         if(cells[i][j].unveiled && cells[i][j].num_mines != 0)
         {
-          count = 0;
-          
-          if(i!=0)
-            if(cells[i-1][j].flag)
-              count++;
-              
-          if(i!=n_row-1)
-            if(cells[i+1][j].flag)
-              count++;
-              
-          if(j!=0)
-            if(cells[i][j-1].flag)
-              count++;
-              
-          if(j!=n_col-1)
-            if(cells[i][j+1].flag)
-              count++;
-              
-          if(i!=0 && j!=0)
-            if(cells[i-1][j-1].flag)
-              count++;
-              
-          if(i!=n_row-1 && j!=0)
-            if(cells[i+1][j-1].flag)
-              count++;
-              
-          if(i!=0 && j!=n_col-1)
-            if(cells[i-1][j+1].flag)
-              count++;
-              
-          if(i!=n_row-1 && j!=n_col-1)
-            if(cells[i+1][j+1].flag)
-              count++;
-              
-          if(count == cells[i][j].num_mines)
+          if(getNearFlaggedMines(i, j) == cells[i][j].num_mines)
           {
             if(i!=0)
               if(!cells[i-1][j].unveiled && !cells[i-1][j].flag)
@@ -350,80 +447,138 @@ class MineSweeper
   
   void checkForSureMines()
   {
-    int count = 0;
     for(int i=0; i<n_row; i++)
       for(int j=0; j<n_col; j++)
-      {     
-        count = 8;
-        
-        if(i!=0)
-          if(cells[i-1][j].unveiled)
-            count--;
-            
-        if(i!=n_row-1)
-          if(cells[i+1][j].unveiled)
-            count--;
-            
-        if(j!=0)
-          if(cells[i][j-1].unveiled)
-            count--;
-            
-        if(j!=n_col-1)
-          if(cells[i][j+1].unveiled)
-            count--;
-            
-        if(i!=0 && j!=0)
-          if(cells[i-1][j-1].unveiled)
-            count--;
-            
-        if(i!=n_row-1 && j!=0)
-          if(cells[i+1][j-1].unveiled)
-            count--;
-            
-        if(i!=0 && j!=n_col-1)
-          if(cells[i-1][j+1].unveiled)
-            count--;
-            
-        if(i!=n_row-1 && j!=n_col-1)
-          if(cells[i+1][j+1].unveiled)
-            count--;
-            
-        if(count == cells[i][j].num_mines)
+      {       
+        if(cells[i][j].unveiled && getNearVeiledCells(i,j) == cells[i][j].num_mines && cells[i][j].num_mines != 0)
         {
           if(i!=0)
             if(!cells[i-1][j].unveiled)
-              cells[i-1][j].setFlagMine();
+              cells[i-1][j].setFlagMine(cells[i][j]);
               
           if(i!=n_row-1)
             if(!cells[i+1][j].unveiled)
-              cells[i+1][j].setFlagMine();
+              cells[i+1][j].setFlagMine(cells[i][j]);
               
           if(j!=0)
             if(!cells[i][j-1].unveiled)
-              cells[i][j-1].setFlagMine();
+              cells[i][j-1].setFlagMine(cells[i][j]);
               
           if(j!=n_col-1)
             if(!cells[i][j+1].unveiled)
-              cells[i][j+1].setFlagMine();
+              cells[i][j+1].setFlagMine(cells[i][j]);
               
           if(i!=0 && j!=0)
             if(!cells[i-1][j-1].unveiled)
-              cells[i-1][j-1].setFlagMine();
+              cells[i-1][j-1].setFlagMine(cells[i][j]);
               
           if(i!=n_row-1 && j!=0)
             if(!cells[i+1][j-1].unveiled)
-              cells[i+1][j-1].setFlagMine();
+              cells[i+1][j-1].setFlagMine(cells[i][j]);
               
           if(i!=0 && j!=n_col-1)
             if(!cells[i-1][j+1].unveiled)
-              cells[i-1][j+1].setFlagMine();
+              cells[i-1][j+1].setFlagMine(cells[i][j]);
               
           if(i!=n_row-1 && j!=n_col-1)
-            if(!cells[i+1][j+1].unveiled)
-              cells[i+1][j+1].setFlagMine();
+            if(!cells[i+1][j+1].unveiled) //<>//
+              cells[i+1][j+1].setFlagMine(cells[i][j]);
         }
       }
       
     calcNumFlag();
+  }
+  
+  void checkMineThanksTo1and2Exclusion()
+  {
+    for(int i=0; i<n_row; i++)
+      for(int j=0; j<n_col; j++)
+      {
+        Cell c = cells[i][j];
+        if(c.unveiled && c.num_mines == 2 && getNearVeiledCells(i, j) == 3)
+        {
+          int count_near_to_ones = 0;
+          
+          if(isVeiledCloseToUnveiledNumber(i-1, j, 1))
+            count_near_to_ones++;
+          if(isVeiledCloseToUnveiledNumber(i+1, j, 1))
+            count_near_to_ones++;
+          if(isVeiledCloseToUnveiledNumber(i, j-1, 1))
+            count_near_to_ones++;
+          if(isVeiledCloseToUnveiledNumber(i, j+1, 1))
+            count_near_to_ones++;
+          if(isVeiledCloseToUnveiledNumber(i-1, j-1, 1))
+            count_near_to_ones++;
+          if(isVeiledCloseToUnveiledNumber(i+1, j-1, 1))
+            count_near_to_ones++;
+          if(isVeiledCloseToUnveiledNumber(i-1, j+1, 1))
+            count_near_to_ones++;
+          if(isVeiledCloseToUnveiledNumber(i+1, j+1, 1))
+            count_near_to_ones++;
+            
+          if(count_near_to_ones == 2)
+          {
+            if(i!=0)
+              if(!isVeiledCloseToUnveiledNumber(i-1, j, 1) && !cells[i-1][j].unveiled)
+                cells[i-1][j].setFlagMine(cells[i][j]);
+            if(i!=n_row-1)
+              if(!isVeiledCloseToUnveiledNumber(i+1, j, 1) && !cells[i+1][j].unveiled)
+                cells[i+1][j].setFlagMine(cells[i][j]);
+            if(j!=0)
+              if(!isVeiledCloseToUnveiledNumber(i, j-1, 1) && !cells[i][j-1].unveiled)
+                cells[i][j-1].setFlagMine(cells[i][j]);
+            if(j!=n_col-1)
+              if(!isVeiledCloseToUnveiledNumber(i, j+1, 1) && !cells[i][j+1].unveiled)
+                cells[i][j+1].setFlagMine(cells[i][j]);
+            if(i!=0 && j!=0)
+              if(!isVeiledCloseToUnveiledNumber(i-1, j-1, 1) && !cells[i-1][j-1].unveiled)
+                cells[i-1][j-1].setFlagMine(cells[i][j]);
+            if(i!=n_row-1 && j!=0)
+              if(!isVeiledCloseToUnveiledNumber(i+1, j-1, 1) && !cells[i+1][j-1].unveiled)
+                cells[i+1][j-1].setFlagMine(cells[i][j]);
+            if(i!=0 && j!=n_col-1)
+              if(!isVeiledCloseToUnveiledNumber(i-1, j+1, 1) && !cells[i-1][j+1].unveiled)
+                cells[i-1][j+1].setFlagMine(cells[i][j]);
+            if(i!=n_row-1 && j!=n_col-1)
+              if(!isVeiledCloseToUnveiledNumber(i+1, j+1, 1) && !cells[i+1][j+1].unveiled)
+                cells[i+1][j+1].setFlagMine(cells[i][j]);
+          }
+        }
+      }
+  }
+  
+  void check121Block()
+  {
+    for(int i=1; i<n_row-1; i++)
+      for(int j=1; j<n_col-1; j++)
+      {
+        Cell c = cells[i][j];
+        if(c.unveiled && c.num_mines == 2 && getNearVeiledCells(i, j) == 3)
+        {
+          //vertical check
+          if(cells[i-1][j].unveiled && cells[i+1][j].unveiled && cells[i-1][j].num_mines == 1 && cells[i+1][j].num_mines == 1)
+          {
+            for(int v=-1; v<2; v+=2)
+              if(!cells[i-1][j+v].unveiled && !cells[i][j+v].unveiled && !cells[i+1][j+v].unveiled)
+              {
+                cells[i-1][j+v].setFlagMine(c);
+                cells[i+1][j+v].setFlagMine(c);
+                clickCell(i, j+v);
+              }
+          }
+          
+          //horizontal check
+          if(cells[i][j-1].unveiled && cells[i][j-1].unveiled && cells[i][j+1].num_mines == 1 && cells[i][j+1].num_mines == 1)
+          {
+            for(int h=-1; h<2; h+=2)
+              if(!cells[i+h][j-1].unveiled && !cells[i+h][j].unveiled && !cells[i+h][j+1].unveiled)
+              {
+                cells[i+h][j-1].setFlagMine(c);
+                cells[i+h][j+1].setFlagMine(c);
+                clickCell(i+h, j);
+              }
+          }
+        }
+      }
   }
 }

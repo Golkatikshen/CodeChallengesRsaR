@@ -10,15 +10,20 @@ Button n_col_button;
 Button n_row_button;
 Button exit_button;
 
-int seed = (int)random(10000, 100000); //Il seed funziona ovviamente solo se si clicca la stessa prima casella durante la partita.
-int diff = 0;
-int n_col = 44;
-int n_row = 42;
+int seed = 24405;//(int)random(10000, 100000); //Il seed funziona ovviamente solo se si clicca la stessa prima casella durante la partita.
+int diff = 2;
+int n_col = 60;
+int n_row = 55;
 String infos = "Clicca su Seed per randomizzare.\nClicca su Mode per cambiare il livello di difficoltà.\nScorri la rotellina del mouse su X e Y per cambiare la dimensione della griglia.";
+String cell_infos;
 
 MineSweeper MS;
 
 //SEED TO CHECK 48671
+//49994 12 13
+//Game started - seed: 19438 2 2
+//Game started - seed: 62699 1 1 50 41
+//Game started - seed: 24405 1 1 60 55 2
 void setup()
 {
   size(800, 600);
@@ -26,7 +31,7 @@ void setup()
   play_button = new Button(100, 50, 150, 50, "PLAY", 6, -4, 200, 0, 0);
   ai_button = new Button(100, 125, 150, 50, "AI", 6, -4, 200, 0, 0);
   randomize_seed_button = new Button(300, 50, 150, 50, "Seed: "+String.valueOf(seed), 6, -4, 100, 100, 100);
-  diff_button = new Button(300, 125, 150, 50, "Mode: EASY", 6, -4, 100, 100, 100);
+  diff_button = new Button(300, 125, 150, 50, "Mode: HARD", 6, -4, 100, 100, 100);
   n_col_button = new Button(300, 200, 150, 50, "X: "+n_col, 6, -4, 100, 100, 100);
   n_row_button = new Button(300, 275, 150, 50, "Y: "+n_row, 6, -4, 100, 100, 100);
   exit_button = new Button(700, 550, 150, 50, "EXIT", 6, -4, 100, 100, 200);
@@ -143,4 +148,20 @@ void keyPressed()
     
   if(key == 'c')
     MS.checkForSureFreeCells();
+    
+  if(key == 'v')
+    MS.checkMineThanksTo1and2Exclusion();
+    
+  if(key == 'z')
+    MS.check121Block();
+    
+  if(key == 'k')
+  {
+    for(int i=0; i<n_row; i++)
+      for(int j=0; j<n_col; j++)
+      {
+        if(MS.cells[i][j].mouseHover())
+          println(MS.getNearFlaggedMines(i, j));
+      }
+  }
 }

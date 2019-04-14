@@ -105,14 +105,21 @@ class Cell
       return -1;
   }
   
-  void setFlagMine()
+  void setFlagMine(Cell c)
   {
+    //if(!flag)
+    //println(x, y, c.x, c.y);
     flag = true;
   }
   
   void setAntiFlagMine()
   {
     anti_flag = true;
+  }
+  
+  String getInfos(boolean b)
+  {
+    return x+", "+y+", "+b;
   }
   
   boolean mouseHover()
